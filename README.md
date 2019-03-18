@@ -1,7 +1,6 @@
 # SMH BLOG
-个人博客
 
-> 过早的优化是罪恶之源
+> 过早的优化是罪恶之源 —Donald Knuth
 
 ## License
 

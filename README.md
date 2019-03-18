@@ -1,5 +1,7 @@
-# smh2274.github.io
+# SMH BLOG
 个人博客
+
+> 过早的优化是罪恶之源
 
 ## License
 

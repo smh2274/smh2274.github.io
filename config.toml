@@ -1,5 +1,5 @@
 
-baseURL                   = "https://smh2274.github.io"
+baseURL                   = "https://smh2274.github.io/tree/master/docs"
 builddrafts                = false
 languageCode               = "zn-Hans"
 canonifyurls               = true

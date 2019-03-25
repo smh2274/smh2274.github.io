@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog on SMH BLOG</title>
-    <link>https://smh2274.github.io/blog/</link>
-    <description>Recent content in Blog on SMH BLOG</description>
+    <title>后端开发 on SMH BLOG</title>
+    <link>https://smh2274.github.io/series/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/</link>
+    <description>Recent content in 后端开发 on SMH BLOG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zn-Hans</language>
-    <lastBuildDate>Thu, 13 Sep 2018 22:31:21 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 Mar 2019 23:11:22 +0800</lastBuildDate>
     
-	<atom:link href="https://smh2274.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://smh2274.github.io/series/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,15 +18,6 @@
       
       <guid>https://smh2274.github.io/blog/2019-03/golang%E4%B9%8Bxml/</guid>
       <description>go xml struct go中xml结构是这么定义的： type WXMessage struct { ToUserName string `xml:&amp;quot;ToUserName&amp;quot;` FromUserName string `xml:&amp;quot;FromUserName&amp;quot;` CreateTime int `xml:&amp;quot;CreateTime&amp;quot;` MsgType string `xml:&amp;quot;MsgType&amp;quot;` Content string `xml:&amp;quot;Content&amp;quot;` } 这么使用会有一点问题，当 res, _ := xml.Marshal(WXMessage) res的结构将变成 &amp;lt;WXMessage&amp;gt; &amp;lt;ToUserName&amp;gt;...&amp;lt;/ToUserName&amp;gt; ... &amp;lt;/WXMessage&amp;gt; 不是真正意义上的xml结构 解决方案 在struct头一行定义xml的名称，如下： type WXMessage struct { XMLName xml.Name `xml:&amp;quot;xml&amp;quot;` ToUserName string `xml:&amp;quot;ToUserName&amp;quot;` FromUserName string `xml:&amp;quot;FromUserName&amp;quot;` CreateTime int `xml:&amp;quot;CreateTime&amp;quot;` MsgType string `xml:&amp;quot;MsgType&amp;quot;` Content string `xml:&amp;quot;Content&amp;quot;` } 这样解析出来的xml将正确地显示 &amp;lt;xml&amp;gt; &amp;lt;ToUserName&amp;gt;...&amp;lt;/ToUserName&amp;gt; ... &amp;lt;/xml&amp;gt; 微信开发中的xml 微信开发中经常有如下结构： &amp;lt;xml&amp;gt; &amp;lt;ToUserName&amp;gt;&amp;lt;![CDATA[toUser]]&amp;gt;&amp;lt;/ToUserName&amp;gt; &amp;lt;FromUserName&amp;gt;&amp;lt;![CDATA[fromUser]]&amp;gt;&amp;lt;/FromUserName&amp;gt; &amp;lt;CreateTime&amp;gt;12345678&amp;lt;/CreateTime&amp;gt; &amp;lt;MsgType&amp;gt;&amp;lt;![CDATA[image]]&amp;gt;&amp;lt;/MsgType&amp;gt; &amp;lt;/xml&amp;gt; 需要对xml里的&amp;lt;、&amp;gt;等进行转义，</description>
-    </item>
-    
-    <item>
-      <title>《地狱变》读后感</title>
-      <link>https://smh2274.github.io/blog/2019-03/%E5%9C%B0%E7%8B%B1%E5%8F%98%E8%AF%BB%E5%90%8E%E6%84%9F/</link>
-      <pubDate>Sun, 24 Mar 2019 15:49:22 +0800</pubDate>
-      
-      <guid>https://smh2274.github.io/blog/2019-03/%E5%9C%B0%E7%8B%B1%E5%8F%98%E8%AF%BB%E5%90%8E%E6%84%9F/</guid>
-      <description>阅读芥川的《地狱变》，内心感慨良多，有对书中人物的同情；有对映射出现实人物性格的揣摩…… 我一直不敢贸然提笔写这篇文章，因为距我最后一次写文章已经过去 5年了，我的内心深处已经是个工科男，已然不懂什么潇潇烟雨如织，风吹落英缤纷的诗意。可《地狱变》让我内心久久未平，我决定提笔记录下内心的想法，当然， 在这之前已借鉴过一些文人的独特见解，我才开始提笔。 这篇小说主要讲的是画技高超的画师良秀为了为堀川大公完成名</description>
     </item>
     
   </channel>

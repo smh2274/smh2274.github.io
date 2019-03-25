@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://smh2274.github.io/blog/2019-03/golang%E4%B9%8Bxml/</loc>
+    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://smh2274.github.io/blog/2019-03/%E5%9C%B0%E7%8B%B1%E5%8F%98%E8%AF%BB%E5%90%8E%E6%84%9F/</loc>
     <lastmod>2019-03-24T15:49:22+08:00</lastmod>
   </url>
@@ -33,8 +38,14 @@
   </url>
   
   <url>
+    <loc>https://smh2274.github.io/tags/go/</loc>
+    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://smh2274.github.io/</loc>
-    <lastmod>2019-03-24T15:49:22+08:00</lastmod>
+    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -45,6 +56,19 @@
   
   <url>
     <loc>https://smh2274.github.io/tags/</loc>
+    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://smh2274.github.io/series/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://smh2274.github.io/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
     <priority>0</priority>
   </url>
   

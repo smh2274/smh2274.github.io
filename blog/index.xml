@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Docker初探</title>
+      <link>https://smh2274.github.io/blog/2019-04/docker%E5%88%9D%E6%8E%A2/</link>
+      <pubDate>Tue, 02 Apr 2019 21:52:22 +0800</pubDate>
+      
+      <guid>https://smh2274.github.io/blog/2019-04/docker%E5%88%9D%E6%8E%A2/</guid>
+      <description>什么是docker 关于docker，什么是docker？这里不做解释，想要了解学习可以查看官方文档 编写Dockerfile 在当前目录新建一个Dockerfile文件，即如下： FROM node MAINTAINER troye.shi2274@gmail.com RUN git clone -q https://github.com/docker-in-practice/todo.git WORKDIR todo RUN npm install EXPOSE 8000 CMD [&amp;quot;npm&amp;quot;, &amp;quot;start&amp;quot;] 定义基础镜像 声明维护人员 clone 相关代码 进入到新clone的目录 运行node包管理器啊，安装相关依赖 暴露出端口号 启动容器时需要运行的命令 构建镜像 执行 docker build .即可构建出镜像, 使用 docker images node列出刚才</description>
+    </item>
+    
+    <item>
       <title>GoLang之xml</title>
       <link>https://smh2274.github.io/blog/2019-03/golang%E4%B9%8Bxml/</link>
       <pubDate>Mon, 25 Mar 2019 23:11:22 +0800</pubDate>

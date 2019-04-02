@@ -6,10 +6,19 @@
     <description>Recent content in Tags on SMH BLOG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zn-Hans</language>
-    <lastBuildDate>Mon, 25 Mar 2019 23:11:22 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 02 Apr 2019 21:52:22 +0800</lastBuildDate>
     
 	<atom:link href="https://smh2274.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Docker</title>
+      <link>https://smh2274.github.io/tags/docker/</link>
+      <pubDate>Tue, 02 Apr 2019 21:52:22 +0800</pubDate>
+      
+      <guid>https://smh2274.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Go</title>
@@ -17,6 +26,15 @@
       <pubDate>Mon, 25 Mar 2019 23:11:22 +0800</pubDate>
       
       <guid>https://smh2274.github.io/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>容器</title>
+      <link>https://smh2274.github.io/tags/%E5%AE%B9%E5%99%A8/</link>
+      <pubDate>Tue, 02 Apr 2019 21:52:22 +0800</pubDate>
+      
+      <guid>https://smh2274.github.io/tags/%E5%AE%B9%E5%99%A8/</guid>
       <description></description>
     </item>
     

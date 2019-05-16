@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on SMH BLOG</title>
+    <link>https://smh2274.github.io/tags/linux/</link>
+    <description>Recent content in Linux on SMH BLOG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zn-Hans</language>
+    <lastBuildDate>Thu, 16 May 2019 08:52:22 +0800</lastBuildDate>
+    
+	<atom:link href="https://smh2274.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SSH反向代理</title>
+      <link>https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Thu, 16 May 2019 08:52:22 +0800</pubDate>
+      
+      <guid>https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</guid>
+      <description>准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： &amp;gt; GatewayPorts yes 2.在local机器上输入以下格式的内容： &amp;gt; ssh -R :: root@ 3.此时登录到remote的terminal，输入以下命令检查是否监听： &amp;gt; netstat -anltp|grep 4.此时访问&amp;lt;remote_IP&amp;gt;:&amp;lt;remote_port&amp;gt; 即可访问到本地的 &amp;lt;local_IP&amp;gt;:&amp;lt;local_port&amp;gt; 扩展（sshd_config） AcceptEnv 指定客户端发送</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -6,10 +6,19 @@
     <description>Recent content on SMH BLOG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zn-Hans</language>
-    <lastBuildDate>Tue, 02 Apr 2019 21:52:22 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 16 May 2019 08:52:22 +0800</lastBuildDate>
     
 	<atom:link href="https://smh2274.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>SSH反向代理</title>
+      <link>https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Thu, 16 May 2019 08:52:22 +0800</pubDate>
+      
+      <guid>https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</guid>
+      <description>准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： &amp;gt; GatewayPorts yes 2.在local机器上输入以下格式的内容： &amp;gt; ssh -R :: root@ 3.此时登录到remote的terminal，输入以下命令检查是否监听： &amp;gt; netstat -anltp|grep 4.此时访问&amp;lt;remote_IP&amp;gt;:&amp;lt;remote_port&amp;gt; 即可访问到本地的 &amp;lt;local_IP&amp;gt;:&amp;lt;local_port&amp;gt; 扩展（sshd_config） AcceptEnv 指定客户端发送</description>
+    </item>
     
     <item>
       <title>Docker初探</title>
@@ -26,7 +35,7 @@
       <pubDate>Mon, 25 Mar 2019 23:11:22 +0800</pubDate>
       
       <guid>https://smh2274.github.io/blog/2019-03/golang%E4%B9%8Bxml/</guid>
-      <description>go xml struct go中xml结构是这么定义的： type WXMessage struct { ToUserName string `xml:&amp;quot;ToUserName&amp;quot;` FromUserName string `xml:&amp;quot;FromUserName&amp;quot;` CreateTime int `xml:&amp;quot;CreateTime&amp;quot;` MsgType string `xml:&amp;quot;MsgType&amp;quot;` Content string `xml:&amp;quot;Content&amp;quot;` } 这么使用会有一点问题，当 res, _ := xml.Marshal(WXMessage) res的结构将变成 &amp;lt;WXMessage&amp;gt; &amp;lt;ToUserName&amp;gt;...&amp;lt;/ToUserName&amp;gt; ... &amp;lt;/WXMessage&amp;gt; 不是真正意义上的xml结构 解决方案 在struct头一行定义xml的名称，如下： type WXMessage struct { XMLName xml.Name `xml:&amp;quot;xml&amp;quot;` ToUserName string `xml:&amp;quot;ToUserName&amp;quot;` FromUserName string `xml:&amp;quot;FromUserName&amp;quot;` CreateTime int `xml:&amp;quot;CreateTime&amp;quot;` MsgType string `xml:&amp;quot;MsgType&amp;quot;` Content string `xml:&amp;quot;Content&amp;quot;` } 这样解析出来的xml将正确地显示 &amp;lt;xml&amp;gt; &amp;lt;ToUserName&amp;gt;...&amp;lt;/ToUserName&amp;gt; ... &amp;lt;/xml&amp;gt; 微信开发中的xml 微信开发中经常有如下结构： &amp;lt;xml&amp;gt; &amp;lt;ToUserName&amp;gt;&amp;lt;![CDATA[toUser]]&amp;gt;&amp;lt;/ToUserName&amp;gt; &amp;lt;FromUserName&amp;gt;&amp;lt;![CDATA[fromUser]]&amp;gt;&amp;lt;/FromUserName&amp;gt; &amp;lt;CreateTime&amp;gt;12345678&amp;lt;/CreateTime&amp;gt; &amp;lt;MsgType&amp;gt;&amp;lt;![CDATA[image]]&amp;gt;&amp;lt;/MsgType&amp;gt; &amp;lt;/xml&amp;gt; 需要对xml里的&amp;lt;、&amp;gt;等进行转义，</description>
+      <description>go xml struct type WXMessage struct { ToUserName string `xml:&amp;quot;ToUserName&amp;quot;` FromUserName string `xml:&amp;quot;FromUserName&amp;quot;` CreateTime int `xml:&amp;quot;CreateTime&amp;quot;` MsgType string `xml:&amp;quot;MsgType&amp;quot;` Content string `xml:&amp;quot;Content&amp;quot;` } 这么使用会有一点问题，当 res, _ := xml.Marshal(WXMessage) res的结构将变成 &amp;lt;WXMessage&amp;gt; &amp;lt;ToUserName&amp;gt;...&amp;lt;/ToUserName&amp;gt; ... &amp;lt;/WXMessage&amp;gt; 不是真正意义上的xml结构 解决方案 在struct头一行定义xml的名称，如下： type WXMessage struct { XMLName xml.Name `xml:&amp;quot;xml&amp;quot;` ToUserName string `xml:&amp;quot;ToUserName&amp;quot;` FromUserName string `xml:&amp;quot;FromUserName&amp;quot;` CreateTime int `xml:&amp;quot;CreateTime&amp;quot;` MsgType string `xml:&amp;quot;MsgType&amp;quot;` Content string `xml:&amp;quot;Content&amp;quot;` } 这样解析出来的xml将正确地显示 &amp;lt;xml&amp;gt; &amp;lt;ToUserName&amp;gt;...&amp;lt;/ToUserName&amp;gt; ... &amp;lt;/xml&amp;gt; 微信开发中的xml 微信开发中经常有如下结构： &amp;lt;xml&amp;gt; &amp;lt;ToUserName&amp;gt;&amp;lt;![CDATA[toUser]]&amp;gt;&amp;lt;/ToUserName&amp;gt; &amp;lt;FromUserName&amp;gt;&amp;lt;![CDATA[fromUser]]&amp;gt;&amp;lt;/FromUserName&amp;gt; &amp;lt;CreateTime&amp;gt;12345678&amp;lt;/CreateTime&amp;gt; &amp;lt;MsgType&amp;gt;&amp;lt;![CDATA[image]]&amp;gt;&amp;lt;/MsgType&amp;gt; &amp;lt;/xml&amp;gt; 需要对xml里的&amp;lt;、&amp;gt;等进行转义，如何转义呢？ 只要在struct</description>
     </item>
     
     <item>

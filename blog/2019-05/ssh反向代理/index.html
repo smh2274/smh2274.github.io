@@ -7,10 +7,10 @@
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1" />
   <meta name="author" content="Troye.Shi">
-  <meta name="description" content="准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： &gt; GatewayPorts yes 2.在local机器上输入以下格式的内容： &gt; ssh -R :: root@ 3.此时登录到remote的terminal，输入以下命令检查是否监听： &gt; netstat -anltp|grep 4.此时访问&lt;remote_IP&gt;:&lt;remote_port&gt; 即可访问到本地的 &lt;local_IP&gt;:&lt;local_port&gt; 扩展（sshd_config） AcceptEnv 指定客户端发送">
+  <meta name="description" content="准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： GatewayPorts yes 2.在local机器上输入以下格式的内容： ssh -R &lt;remote_port&gt;:&lt;local_IP&gt;:&lt;local_port&gt; root@&lt;remote_IP&gt; 3.此时登录到remote的terminal，输入以下命令检查是否监听： netstat -anltp|grep 4.此时访问&lt;remote_IP&gt;:&lt;remote_port&gt; 即可访问到本地的 &lt;local_IP&gt;:&lt;local_port&gt; 扩展（sshd_config） AcceptEnv 指定客户端发送的哪些">
   
   <meta property="og:title" content="SSH反向代理" />
-<meta property="og:description" content="准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： &gt; GatewayPorts yes 2.在local机器上输入以下格式的内容： &gt; ssh -R :: root@ 3.此时登录到remote的terminal，输入以下命令检查是否监听： &gt; netstat -anltp|grep 4.此时访问&lt;remote_IP&gt;:&lt;remote_port&gt; 即可访问到本地的 &lt;local_IP&gt;:&lt;local_port&gt; 扩展（sshd_config） AcceptEnv 指定客户端发送" />
+<meta property="og:description" content="准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： GatewayPorts yes 2.在local机器上输入以下格式的内容： ssh -R &lt;remote_port&gt;:&lt;local_IP&gt;:&lt;local_port&gt; root@&lt;remote_IP&gt; 3.此时登录到remote的terminal，输入以下命令检查是否监听： netstat -anltp|grep 4.此时访问&lt;remote_IP&gt;:&lt;remote_port&gt; 即可访问到本地的 &lt;local_IP&gt;:&lt;local_port&gt; 扩展（sshd_config） AcceptEnv 指定客户端发送的哪些" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" /><meta property="article:published_time" content="2019-05-16T08:52:22&#43;08:00"/>
 <meta property="article:modified_time" content="2019-05-16T08:52:22&#43;08:00"/>
@@ -313,14 +313,23 @@
 
 <h2 id="操作">操作</h2>
 
-<p>1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置：
-&gt; GatewayPorts yes</p>
+<p>1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置：</p>
 
-<p>2.在local机器上输入以下格式的内容：
-&gt; ssh -R <remote_port>:<local_IP>:<local_port> root@<remote_IP></p>
+<blockquote>
+<p>GatewayPorts yes</p>
+</blockquote>
 
-<p>3.此时登录到remote的terminal，输入以下命令检查是否监听：
-&gt; netstat -anltp|grep <remote_port></p>
+<p>2.在local机器上输入以下格式的内容：</p>
+
+<blockquote>
+<p>ssh -R <code>&lt;remote_port&gt;:&lt;local_IP&gt;:&lt;local_port&gt; root@&lt;remote_IP&gt;</code></p>
+</blockquote>
+
+<p>3.此时登录到remote的terminal，输入以下命令检查是否监听：</p>
+
+<blockquote>
+<p>netstat -anltp|grep <remote_port></p>
+</blockquote>
 
 <p>4.此时访问<code>&lt;remote_IP&gt;:&lt;remote_port&gt;</code> 即可访问到本地的 <code>&lt;local_IP&gt;:&lt;local_port&gt;</code></p>
 

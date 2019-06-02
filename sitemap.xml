@@ -3,8 +3,18 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://smh2274.github.io/moment/</loc>
+    <lastmod>2019-05-19T20:29:37-07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</loc>
     <lastmod>2019-05-16T08:52:22+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://smh2274.github.io/moment/2019-04-30/</loc>
+    <lastmod>2019-04-30T20:29:37-07:00</lastmod>
   </url>
   
   <url>
@@ -30,16 +40,6 @@
   <url>
     <loc>https://smh2274.github.io/blog/</loc>
     <lastmod>2018-09-13T22:31:21+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://smh2274.github.io/moment/</loc>
-    <lastmod>2015-08-19T20:29:37-07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://smh2274.github.io/moment/test/</loc>
-    <lastmod>2015-08-19T20:29:37-07:00</lastmod>
   </url>
   
   <url>

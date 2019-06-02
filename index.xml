@@ -17,7 +17,16 @@
       <pubDate>Thu, 16 May 2019 08:52:22 +0800</pubDate>
       
       <guid>https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</guid>
-      <description>准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： &amp;gt; GatewayPorts yes 2.在local机器上输入以下格式的内容： &amp;gt; ssh -R :: root@ 3.此时登录到remote的terminal，输入以下命令检查是否监听： &amp;gt; netstat -anltp|grep 4.此时访问&amp;lt;remote_IP&amp;gt;:&amp;lt;remote_port&amp;gt; 即可访问到本地的 &amp;lt;local_IP&amp;gt;:&amp;lt;local_port&amp;gt; 扩展（sshd_config） AcceptEnv 指定客户端发送</description>
+      <description>准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： GatewayPorts yes 2.在local机器上输入以下格式的内容： ssh -R &amp;lt;remote_port&amp;gt;:&amp;lt;local_IP&amp;gt;:&amp;lt;local_port&amp;gt; root@&amp;lt;remote_IP&amp;gt; 3.此时登录到remote的terminal，输入以下命令检查是否监听： netstat -anltp|grep 4.此时访问&amp;lt;remote_IP&amp;gt;:&amp;lt;remote_port&amp;gt; 即可访问到本地的 &amp;lt;local_IP&amp;gt;:&amp;lt;local_port&amp;gt; 扩展（sshd_config） AcceptEnv 指定客户端发送的哪些</description>
+    </item>
+    
+    <item>
+      <title>Gopher China 2019</title>
+      <link>https://smh2274.github.io/moment/2019-04-30/</link>
+      <pubDate>Tue, 30 Apr 2019 20:29:37 -0700</pubDate>
+      
+      <guid>https://smh2274.github.io/moment/2019-04-30/</guid>
+      <description>第五届 Gopher China 😯，非常有幸与国际知名讲师Dave Cheney合影 🥰 相关讲师PPT 提取码: t1jw</description>
     </item>
     
     <item>
@@ -45,16 +54,6 @@
       
       <guid>https://smh2274.github.io/blog/2019-03/%E5%9C%B0%E7%8B%B1%E5%8F%98%E8%AF%BB%E5%90%8E%E6%84%9F/</guid>
       <description>阅读芥川的《地狱变》，内心感慨良多，有对书中人物的同情；有对映射出现实人物性格的揣摩…… 我一直不敢贸然提笔写这篇文章，因为距我最后一次写文章已经过去 5年了，我的内心深处已经是个工科男，已然不懂什么潇潇烟雨如织，风吹落英缤纷的诗意。可《地狱变》让我内心久久未平，我决定提笔记录下内心的想法，当然， 在这之前已借鉴过一些文人的独特见解，我才开始提笔。 这篇小说主要讲的是画技高超的画师良秀为了为堀川大公完成名</description>
-    </item>
-    
-    <item>
-      <title>Moment Test</title>
-      <link>https://smh2274.github.io/moment/test/</link>
-      <pubDate>Wed, 19 Aug 2015 20:29:37 -0700</pubDate>
-      
-      <guid>https://smh2274.github.io/moment/test/</guid>
-      <description>The Hitchhiker&amp;rsquo;s Guide to the Galaxy is a comedy science fiction series created by Douglas Adams. Originally a radio comedy broadcast on BBC Radio 4 in 1978, it was later adapted to other formats, and over several years it gradually became an international multi-media phenomenon. Adaptations have included stage shows, a &amp;ldquo;trilogy&amp;rdquo; of five books published between 1979 and 1992, a sixth novel penned by Eoin Colfer in 2009, a 1981 TV series, a 1984 computer game, and three series of three-part comic book adaptations of the first three novels published by DC Comics between 1993 and 1996. There were also two series of towels, produced by Beer-Davies, that are considered by some fans to be an &amp;ldquo;official version&amp;rdquo; of The Hitchhiker&amp;rsquo;s Guide to the Galaxy, as they include text from the first novel.
-Movie A Hollywood-funded film version, produced and filmed in the UK, was released in April 2005, and radio adaptations of the third, fourth, and fifth novels were broadcast from 2004 to 2005. Adams did many of these adaptations, including the novels, the TV series, the computer game, and the earliest drafts of the Hollywood film’s screenplay, and some of the stage shows introduced new material written by Adams.</description>
     </item>
     
   </channel>

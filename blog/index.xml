@@ -17,7 +17,7 @@
       <pubDate>Thu, 16 May 2019 08:52:22 +0800</pubDate>
       
       <guid>https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</guid>
-      <description>准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： &amp;gt; GatewayPorts yes 2.在local机器上输入以下格式的内容： &amp;gt; ssh -R :: root@ 3.此时登录到remote的terminal，输入以下命令检查是否监听： &amp;gt; netstat -anltp|grep 4.此时访问&amp;lt;remote_IP&amp;gt;:&amp;lt;remote_port&amp;gt; 即可访问到本地的 &amp;lt;local_IP&amp;gt;:&amp;lt;local_port&amp;gt; 扩展（sshd_config） AcceptEnv 指定客户端发送</description>
+      <description>准备工作 准备一台公网服务器(remote)，本地服务器(local) 操作 1.登录到remote，修改 /etc/ssh/sshd_config 文件，设置： GatewayPorts yes 2.在local机器上输入以下格式的内容： ssh -R &amp;lt;remote_port&amp;gt;:&amp;lt;local_IP&amp;gt;:&amp;lt;local_port&amp;gt; root@&amp;lt;remote_IP&amp;gt; 3.此时登录到remote的terminal，输入以下命令检查是否监听： netstat -anltp|grep 4.此时访问&amp;lt;remote_IP&amp;gt;:&amp;lt;remote_port&amp;gt; 即可访问到本地的 &amp;lt;local_IP&amp;gt;:&amp;lt;local_port&amp;gt; 扩展（sshd_config） AcceptEnv 指定客户端发送的哪些</description>
     </item>
     
     <item>

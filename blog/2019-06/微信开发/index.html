@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zn-Hans">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1" />
+  <meta name="author" content="Troye.Shi">
+  <meta name="description" content="大纲如下 微信公众号开发 服务器验证 处理消息 推送消息 生成菜单 小程序开发 获取个人信息 微信支付 总结 微信公众号开发 1.服务器校验 timestamp(时间戳), nonce(随机字符串), signature(签名), token(令牌) func AccessVerify(timestamp, nonce, signature, token string) (bool, error) { info := []string{timestamp, nonce, token} sort.Strings(info) s := sha1.New() if _, err := io.WriteString(s, strings.Join(info, &quot;&quot;)); err != nil { return false, errors.New(&quot;Sha1 Code Fail &quot; &#43; err.Error()) } newSignature := fmt.Sprintf(&quot;%x&quot;, s.Sum(nil)) return newSignature == signature, nil } 接收的URL必须是80端口或者443端口 2.处理消息 消息类型 text （文本） image （图片） voice （">
+  
+  <meta property="og:title" content="微信开发" />
+<meta property="og:description" content="大纲如下 微信公众号开发 服务器验证 处理消息 推送消息 生成菜单 小程序开发 获取个人信息 微信支付 总结 微信公众号开发 1.服务器校验 timestamp(时间戳), nonce(随机字符串), signature(签名), token(令牌) func AccessVerify(timestamp, nonce, signature, token string) (bool, error) { info := []string{timestamp, nonce, token} sort.Strings(info) s := sha1.New() if _, err := io.WriteString(s, strings.Join(info, &quot;&quot;)); err != nil { return false, errors.New(&quot;Sha1 Code Fail &quot; &#43; err.Error()) } newSignature := fmt.Sprintf(&quot;%x&quot;, s.Sum(nil)) return newSignature == signature, nil } 接收的URL必须是80端口或者443端口 2.处理消息 消息类型 text （文本） image （图片） voice （" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://smh2274.github.io/blog/2019-06/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/" /><meta property="article:published_time" content="2019-06-12T21:52:22&#43;08:00"/>
+<meta property="article:modified_time" content="2019-06-12T21:52:22&#43;08:00"/><meta property="og:see_also" content="https://smh2274.github.io/blog/2019-06/%E6%B7%B1%E5%BA%A6%E5%AF%86%E8%A7%A3go%E4%B9%8Binterface/" /><meta property="og:see_also" content="https://smh2274.github.io/blog/2019-03/golang%E4%B9%8Bxml/" />
+
+
+
+  <title>
+  
+       微信开发 | SMH BLOG 
+  
+  </title>
+
+  <link rel="canonical" href="https://smh2274.github.io/blog/2019-06/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/">
+
+  
+  
+
+  
+  <link href="https://smh2274.github.io/css/vendors-extensions/fontawesome/all.min.css" rel="stylesheet">
+
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:300,400,500,600">
+  <link href="https://smh2274.github.io/css/font.css" rel="stylesheet"> 
+    
+  
+  <link href="https://smh2274.github.io/css/vendors/bootstrap4/bootstrap.min.css" rel="stylesheet">
+  <link href="https://smh2274.github.io/css/vendors-extensions/mdb/mdb.min.css" rel="stylesheet"> 
+  <link href="https://smh2274.github.io/css/vendors/mdb/style.min.css" rel="stylesheet"> 
+  <link href="https://smh2274.github.io/css/main.css" rel="stylesheet">
+
+
+  
+  <link rel="shortcut icon"
+  
+      href="https://smh2274.github.io/img/shi.png"
+  
+  >
+
+
+  
+  
+
+  <style type="text/css">
+      @media (min-width: 800px) and (max-width: 850px) {
+              .navbar:not(.top-nav-collapse) {
+                  background: #1C2331!important;
+              }
+          }
+  </style>
+
+
+  
+    
+    <link rel="stylesheet" href="https://smh2274.github.io/js/vendors/katex/katex.min.css">
+  
+  
+
+  
+    
+    <link rel="stylesheet" href="https://smh2274.github.io/css/vendors/highlight/github-gist.css">
+  
+
+</head>
+
+  <body class="bg-light" data-spy="scroll" data-target="#page-scrollspy" data-offset="90">
+  
+    
+    
+
+    
+      
+
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+
+      
+      <a class="navbar-brand" href="https://smh2274.github.io">
+          
+        <img class="avatar" src="https://smh2274.github.io/img/shi.png" style="width: 40px!important;height: auto;"  class="d-inline-block align-top" alt="" >
+        
+        <strong> Troye.Shi</strong>
+      </a>
+
+      
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        
+        <ul class="navbar-nav mr-auto ">
+          <li class="nav-item ">
+            <a class="nav-link" href="https://smh2274.github.io">Home</a>
+          </li>
+             
+            <li class="nav-item ">
+              <a class="nav-link" href="https://smh2274.github.io/blog/" >Blog  </a>
+            </li>
+          
+             
+            <li class="nav-item ">
+              <a class="nav-link" href="https://smh2274.github.io/moment/" >Moment  </a>
+            </li>
+          
+             
+            <li class="nav-item ">
+              <a class="nav-link" href="https://smh2274.github.io/about/" >About  </a>
+            </li>
+          
+          
+        </ul>
+
+      </div>
+
+    </div>
+  </nav>
+  
+ 
+      
+
+
+
+
+
+
+
+<div id="site-header" class="carousel slide carousel-fade" data-ride="carousel" style="height: 18rem;">
+    
+
+    
+    
+    
+
+    
+    <div class="carousel-inner" role="listbox">
+        
+        
+
+        
+        <div class="carousel-item active">
+            <div class="view"
+                 style="background-image: url('https://smh2274.github.io/img/header-slides/raw_14563119.jpg'); background-repeat: no-repeat; background-size: cover;">
+
+                
+                <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
+
+                    
+                    
+                    
+
+                </div>
+                
+
+            </div>
+        </div>
+        
+        
+        
+        
+
+        
+        <div class="carousel-item">
+            <div class="view"
+                 style="background-image: url('https://smh2274.github.io/img/header-slides//raw_1515847341.jpg'); background-repeat: no-repeat; background-size: cover;">
+
+                
+                <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
+
+
+                </div>
+                
+
+            </div>
+        </div>
+        
+        
+        
+
+
+    </div>
+    
+
+    
+    <div class="carousel-content text-center white-text wow fadeIn">
+        <div class="row mx-0 headfont mt-3 pt-4">
+            
+            <div class="col-12 col-sm-5 align-middle">
+                <a href="https://smh2274.github.io">
+                    
+                    <img class="pull-right avatar avatar-md" src="https://smh2274.github.io/img/profile.png" alt="">
+                    
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-7 text-left pl-2">
+                <a href="https://smh2274.github.io">
+                    <h1 class="mb-2 h1" style="font-weight: 300;">
+                        <strong>SMH BLOG</strong>
+                    </h1>
+                </a>
+
+
+                
+                <div class="mt-2" style="font-size: 1rem; color: white;">
+                    
+                    <a href="https://github.com/smh2274" target="_blank" rel="noopener"><i class="fab fa-github pr-1"
+                                                                                           aria-hidden="true"></i></a>
+                    
+
+                    
+                    <a href="https://smh2274.github.io/img/Wechat.jpeg" target="_blank" rel="noopener"><i class="fab fa-weixin pr-1"
+                                                                                           aria-hidden="true"></i></a>
+                    
+
+                    
+                    <a href="https://gophers.slack.com/messages/DF1GXAY3X/files/UF2NU0G2J/" target="_blank" rel="noopener"><i class="fab fa-slack pr-1"
+                                                                                          aria-hidden="true"></i></a>
+                    
+
+                    
+                    <a href="https://www.linkedin.com/in/%E6%98%8E%E8%88%AA-%E5%8F%B2-32a979182/" target="_blank" rel="noopener"><i
+                            class="fab fa-linkedin pr-1" aria-hidden="true"></i></a>
+                    
+
+                    
+
+                    
+                    <a href="mailto:17858753860@163.com"><i class="far fa-envelope-open pr-1"
+                                                                  aria-hidden="true"></i></a>
+                    
+
+                    
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    
+    
+
+</div>
+
+  
+    
+
+    
+  
+  <main class="post-main-wrapper">
+    
+    
+    <div class="row">
+
+      
+
+      
+      <div class="col-md-10">
+      
+
+        
+        <div class="z-depth-1  post-wrapper white-bg single-post">
+
+          <div class="post-header text-center" >
+  <ul class="post-meta li-x">
+    
+      
+        <li><a href="https://smh2274.github.io/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91"><i class="fas fa-folder-open pr-1" aria-hidden="true"></i> 后端开发 </a></li>
+      
+    
+    
+      
+        <li><a href="https://smh2274.github.io/series/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91"><i class="fas fa-bookmark pr-1" aria-hidden="true"></i>后端开发</a></li>
+      
+    
+  </ul>
+
+  <div class="px-4 post-heading">微信开发</div>
+
+  <ul class="post-meta li-x mt-1">
+    
+      <li>Jun 12, 2019</li>
+    
+
+    
+      <li class="middot"></li>
+      <li>9 minutes read</li>
+    
+  </ul>
+  
+
+</div>
+
+
+          <div class="post-content markdown">
+            
+
+<p><strong>大纲如下</strong></p>
+
+<ul>
+<li><p>微信公众号开发</p>
+
+<ul>
+<li>服务器验证</li>
+<li>处理消息</li>
+<li>推送消息</li>
+<li>生成菜单</li>
+</ul></li>
+
+<li><p>小程序开发</p>
+
+<ul>
+<li>获取个人信息</li>
+<li>微信支付
+<br /></li>
+</ul></li>
+
+<li><p>总结</p></li>
+</ul>
+
+<hr />
+
+<h3 id="微信公众号开发">微信公众号开发</h3>
+
+<p>1.服务器校验</p>
+
+<p><img src="http://mmbiz.qpic.cn/mmbiz_png/PiajxSqBRaEIQxibpLbyuSK9B2CRwJYwMRFbDwdwNicNwcwhWaTuibPIqUwocStP6VicjxyGc2S96XlaNiciagkc26eKg/0?wx_fmt=png" alt="image" /></p>
+
+<ul>
+<li>timestamp(时间戳), nonce(随机字符串), signature(签名), token(令牌)</li>
+</ul>
+
+<pre><code class="language-go"> func AccessVerify(timestamp, nonce, signature, token string) (bool, error) {
+ 	info := []string{timestamp, nonce, token}
+ 	sort.Strings(info)
+ 
+ 	s := sha1.New()
+ 	if _, err := io.WriteString(s, strings.Join(info, &quot;&quot;)); err != nil {
+ 		return false, errors.New(&quot;Sha1 Code Fail &quot; + err.Error())
+ 	}
+ 
+ 	newSignature := fmt.Sprintf(&quot;%x&quot;, s.Sum(nil))
+ 
+ 	return newSignature == signature, nil
+ }
+</code></pre>
+
+<blockquote>
+<p>接收的URL必须是80端口或者443端口</p>
+</blockquote>
+
+<hr />
+
+<p>2.处理消息</p>
+
+<ul>
+<li>消息类型
+
+<ul>
+<li>text       （文本）</li>
+<li>image      （图片）</li>
+<li>voice      （语音）</li>
+<li>video      （视频）</li>
+<li>shortvideo （小视频）</li>
+<li>location   （地理位置）</li>
+<li>link       （链接）</li>
+<li>event      （事件）
+
+<ul>
+<li>subscribe   （关注事件）</li>
+<li>unsubscribe （取关事件）</li>
+<li>SCAN        （扫描二维码事件）</li>
+<li>LOCATION    （上报地理位置）</li>
+<li>CLICK       （点击菜单拉取消息）</li>
+<li>VIEW        （点击菜单跳转链接）
+<br /></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>用户向公众号发送&rdquo;你好&rdquo;，这个数据先被微信服务器打包成xml格式的数据，然后才转发到我们的服务器上：</p>
+
+<pre><code class="language-xml"> &lt;xml&gt;
+   &lt;ToUserName&gt;&lt;![CDATA[开发者Openid]]&gt;&lt;/ToUserName&gt;
+   &lt;FromUserName&gt;&lt;![CDATA[用户Openid]]&gt;&lt;/FromUserName&gt;
+   &lt;CreateTime&gt;1348831860&lt;/CreateTime&gt;
+   &lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;
+   &lt;Content&gt;&lt;![CDATA[你好]]&gt;&lt;/Content&gt;
+   &lt;MsgId&gt;1234567890123456&lt;/MsgId&gt;
+ &lt;/xml&gt;
+</code></pre>
+
+<p>我们先判断其消息类型是文本，然后可根据内容作相应的回复。
+ 我们也要把我们要回复的消息封装成xml返回给微信服务器，微信服务器再发送给用户</p>
+
+<pre><code class="language-xml"> &lt;xml&gt;
+   &lt;ToUserName&gt;&lt;![CDATA[用户Openid]]&gt;&lt;/ToUserName&gt;
+   &lt;FromUserName&gt;&lt;![CDATA[开发者Openid]]&gt;&lt;/FromUserName&gt;
+   &lt;CreateTime&gt;12345678&lt;/CreateTime&gt;
+   &lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;
+   &lt;Content&gt;&lt;![CDATA[你好，我是创服宝客服小宝👶，请问有什么可以为你服务]]&gt;&lt;/Content&gt;
+ &lt;/xml&gt;
+</code></pre>
+
+<blockquote>
+<p>封装xml时遇到了坑，<a href="https://smh2274.github.io/blog/2019-03/golang%E4%B9%8Bxml/">避坑指南</a></p>
+</blockquote>
+
+<p>3.推送消息
+  实际开发中，业务需要主动推送模板消息给指定用户。这时候需要发送模板消息。
+  <img src="http://mmbiz.qpic.cn/mmbiz_png/PiajxSqBRaEIQxibpLbyuSK9XkjDgZoL0xnC7SUbrIRwI8NhEGFeax6HoPcTMDqKGYxaSoNqBwocrj70Pt1EcKnQ/0?wx_fmt=png" alt="image" /></p>
+
+<blockquote>
+<p>access_token有效期是7200秒(2小时)</p>
+
+<p>重复获取会让上次获取的access_token失效</p>
+
+<p>获取access_token的服务器IP必须提前配置在公众平台的白名单中</p>
+</blockquote>
+
+<p>首先要在微信公众平台上选取相应的模板</p>
+
+<pre><code class="language-text">{{first.DATA}}
+客户名称：{{keyword1.DATA}}
+客服类型：{{keyword2.DATA}}
+提醒内容：{{keyword3.DATA}}
+通知时间：{{keyword4.DATA}}
+{{remark.DATA}}
+</code></pre>
+
+<p>然后根据实际业务，把数据封装成json数据发送给微信服务器</p>
+
+<pre><code class="language-json">{
+           &quot;touser&quot;:&quot;OPENID&quot;,
+           &quot;template_id&quot;:&quot;ngqIpbwh8bUfcSsECmogfXcV14J0tQlEpBO27izEYtY&quot;,
+           &quot;url&quot;:&quot;http://weixin.qq.com/download&quot;,  
+           &quot;miniprogram&quot;:{
+             &quot;appid&quot;:&quot;xiaochengxuappid12345&quot;,
+             &quot;pagepath&quot;:&quot;index?foo=bar&quot;
+           },          
+           &quot;data&quot;:{
+                   &quot;first&quot;: {
+                       &quot;value&quot;:&quot;尊敬的客户您好，您本月的创业报告已经生成，具体信息如下:&quot;,
+                       &quot;color&quot;:&quot;#173177&quot;
+                   },
+                   &quot;keyword1&quot;:{
+                       &quot;value&quot;:&quot;宁波创服宝科技有限公司&quot;,
+                       &quot;color&quot;:&quot;#173177&quot;
+                   },
+                   &quot;keyword2&quot;: {
+                       &quot;value&quot;:&quot;创业报告&quot;,
+                       &quot;color&quot;:&quot;#173177&quot;
+                   },
+                   &quot;keyword3&quot;: {
+                       &quot;value&quot;:&quot;请查收您的6月份创业报告&quot;,
+                       &quot;color&quot;:&quot;#173177&quot;
+                   },
+                   &quot;remark&quot;:{
+                       &quot;value&quot;:&quot;易创-让创业更容易&quot;,
+                       &quot;color&quot;:&quot;#173177&quot;
+                   }
+           }
+       }
+</code></pre>
+
+<p>4.生成菜单
+因为公众号是开发者模式，所以无法在公众平台配置菜单结构，只需向微信服务器发送相应的json数据：</p>
+
+<ul>
+<li>URL：<a href="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=xxxxx">https://api.weixin.qq.com/cgi-bin/menu/create?access_token=xxxxx</a></li>
+</ul>
+
+<pre><code class="language-json"> {
+     &quot;button&quot;:[
+     {    
+          &quot;type&quot;:&quot;click&quot;,
+          &quot;name&quot;:&quot;联系我们&quot;,
+          &quot;key&quot;:&quot;contact_us&quot;
+      },
+      {
+           &quot;name&quot;:&quot;关于我们&quot;, 
+           &quot;type&quot;:&quot;view&quot;,
+           &quot;url&quot;:&quot;http://mp.weixin.qq.com/s?__biz=MzU2NTg0NDgzOA==&amp;mid=100000014&amp;idx=1&amp;sn=1f8aa277a88de2bdf429564226aacdda&amp;chksm=7cb4cf074bc3461112ed21128e57528a4acbe7e50dbaca42eefc3069c7d5fcd54d0fdfaf3f9c#rd&quot;
+       },
+       {
+            &quot;type&quot;:&quot;miniprogram&quot;,
+            &quot;name&quot;:&quot;我的报告&quot;,
+            &quot;appid&quot;:&quot;xxxxxxxx&quot;,
+            &quot;url&quot;:&quot;http://mp.weixin.qq.com&quot;,
+            &quot;pagepath&quot;:&quot;pages/auth/auth&quot;
+        }
+          
+      ]
+ }
+</code></pre>
+
+<h3 id="小程序开发">小程序开发</h3>
+
+<p>1.获取个人信息</p>
+
+<p>小程序登录时，需要用户授权获取用户隐私信息，如unionid(用户在公众号和小程序的唯一标志)</p>
+
+<p>用户首先进入小程序（登录），会获取到code（登录凭证），我们用code向微信服务器换取session_key（会话密钥）</p>
+
+<pre><code class="language-go">func LoginWXMiniProgram(code string) (WXRespUserInfo, error) {
+	var userInfo WXRespUserInfo
+	resp, err := http.Get(fmt.Sprintf(AuthCode2SessionUrl, MiniAppId, MiniAppSecret, code))
+	if err != nil {
+		return userInfo, errors.New(WXError.Error() + err.Error())
+	}
+	defer resp.Body.Close()
+
+	res, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return userInfo, errors.New(WXError.Error() + err.Error())
+	}
+
+	if err = json.Unmarshal(res, &amp;userInfo); err != nil {
+		return userInfo, err
+	}
+
+	if userInfo.ErrCode == 0 {
+		return userInfo, nil
+	} else {
+		return userInfo, errors.New(WXError.Error() + userInfo.ErrMsg)
+	}
+}
+</code></pre>
+
+<p>拿到session_key，用户在确定授权后，我们会拿到另外两个个数据：</p>
+
+<p>encryptData（完整用户信息的加密数据）, iv（加密算法的初始向量） + sessionKey（会话密钥）</p>
+
+<p>我们通过解密算法来获取encryptData的用户信息
+&gt;  对称解密使用的算法为 AES-128-CBC，数据采用PKCS#7填充。</p>
+
+<blockquote>
+<p>对称解密的目标密文为 Base64_Decode(encryptedData)。</p>
+
+<p>对称解密秘钥 aeskey = Base64_Decode(session_key), aeskey 是16字节。</p>
+
+<p>对称解密算法初始向量 为Base64_Decode(iv)，其中iv由数据接口返回。</p>
+</blockquote>
+
+<pre><code class="language-go">func DecryptWXOpenData(sessionKey, encryptData, iv string) (WXDecryptedUserInfo, error) {
+	var userInfo WXDecryptedUserInfo
+	aesCipherText, err := base64.StdEncoding.DecodeString(encryptData)
+	if err != nil {
+		return userInfo, errors.New(WXError.Error() + err.Error())
+	}
+
+	aesKey, err := base64.StdEncoding.DecodeString(sessionKey)
+	if err != nil {
+		return userInfo, errors.New(WXError.Error() + err.Error())
+	}
+
+	aesIV, err := base64.StdEncoding.DecodeString(iv)
+	if err != nil {
+		return userInfo, errors.New(WXError.Error() + err.Error())
+	}
+
+	data, err := AesDecrypt(aesCipherText, aesKey, aesIV)
+	if err != nil {
+		return userInfo, errors.New(WXError.Error() + err.Error())
+	}
+
+	aesPlantText := PKCS7UnPadding(data)
+
+	if err := json.Unmarshal(aesPlantText, &amp;userInfo); err != nil {
+		return userInfo, errors.New(&quot;unmarshal data fail &quot; + err.Error())
+	}
+
+	return userInfo, nil
+}
+
+func AesDecrypt(decodeData, decodeSessionKey, decodeIv []byte) ([]byte, error) {
+	block, err := aes.NewCipher(decodeSessionKey)
+	if err != nil {
+		return nil, err
+	}
+
+	blockMode := cipher.NewCBCDecrypter(block, decodeIv)
+	originData := make([]byte, len(decodeData))
+	blockMode.CryptBlocks(originData, decodeData)
+
+	return originData, nil
+}
+
+func PKCS7UnPadding(plantText []byte) []byte {
+	length := len(plantText)
+	if length &gt; 0 {
+		unPadding := int(plantText[length-1])
+		return plantText[:(length - unPadding)]
+	}
+	return plantText
+}
+</code></pre>
+
+<p>解密后获得的结构为：</p>
+
+<pre><code class="language-json">{
+  &quot;openId&quot;: &quot;OPENID&quot;,
+  &quot;nickName&quot;: &quot;NICKNAME&quot;,
+  &quot;gender&quot;: GENDER,
+  &quot;city&quot;: &quot;CITY&quot;,
+  &quot;province&quot;: &quot;PROVINCE&quot;,
+  &quot;country&quot;: &quot;COUNTRY&quot;,
+  &quot;avatarUrl&quot;: &quot;AVATARURL&quot;,
+  &quot;unionId&quot;: &quot;UNIONID&quot;,
+  &quot;watermark&quot;: {
+    &quot;appid&quot;:&quot;APPID&quot;,
+    &quot;timestamp&quot;:TIMESTAMP
+  }
+}
+</code></pre>
+
+<p>2.微信支付</p>
+
+<p><img src="https://pay.weixin.qq.com/wiki/doc/api/img/wxa-7-2.jpg" alt="image" /></p>
+
+<p>一、生成预支付订单</p>
+
+<p>主要是生成signature（签名）的部分容易出错，重点强调下：</p>
+
+<blockquote>
+<p>◆ 参数名ASCII码从小到大排序（字典序）；</p>
+
+<p>◆ 如果参数的值为空不参与签名；</p>
+
+<p>◆ 参数名区分大小写；</p>
+
+<p>◆ 验证调用返回或微信主动通知签名时，传送的sign参数不参与签名，将生成的签名与该sign值作校验。</p>
+
+<p>◆ 微信接口可能增加字段，验证签名时必须支持增加的扩展字段</p>
+</blockquote>
+
+<p>签名支持MD5加密和SHA256加密，这里使用的是MD5加密</p>
+
+<pre><code class="language-go">func GetSign(mReq map[string]interface{}, key string) string {
+	var signStrings string
+	sortedKeys := make([]string, 0)
+	for k := range mReq {
+		sortedKeys = append(sortedKeys, k)
+	}
+
+	sort.Strings(sortedKeys)
+
+	for _, k := range sortedKeys {
+		value := fmt.Sprintf(&quot;%v&quot;, mReq[k])
+		if value != &quot;&quot; {
+			signStrings = fmt.Sprintf(&quot;%s%s=%s&amp;&quot;, signStrings, k, value)
+		}
+	}
+	if key != &quot;&quot; {
+		signStrings = signStrings + &quot;key=&quot; + key
+	}
+
+	md5Ctx := md5.New()
+	md5Ctx.Write([]byte(signStrings))
+	cipherStr := md5Ctx.Sum(nil)
+	upperSign := strings.ToUpper(hex.EncodeToString(cipherStr))
+	return upperSign
+}
+</code></pre>
+
+<blockquote>
+<p>订单总金额以分为单位，比如订单金额为0.57元，我们生成预付款订单的价格为57</p>
+
+<p>注意：golang的float64类型，会把0.57变成0.56666&hellip;9，然后我们转化成int的时候变成了56，所以对float64要做相应的精度转化</p>
+</blockquote>
+
+<p>二、组合数据再次签名</p>
+
+<p>我们向微信服务器提交完表单后，若SUCCESS，会返回给我们prepare_id(预付订单ID)</p>
+
+<p>我们把appId（小程序ID）、timeStamp（时间戳）、nonceStr（随机字符串）、package（&rdquo;prepare_id=&ldquo;xxx&rdquo;&ldquo;）进行组合签名，
+获取paySignature（支付签名）</p>
+
+<p>最后我们把timeStamp（时间戳）、nonceStr（随机字符串）、paySignature（支付签名）、signType（签名类型）、package（&rdquo;prepare_id=&ldquo;xxx&rdquo;&ldquo;）返回给前端小程序，
+小程序页面就打开了支付面板</p>
+
+<p>三、接收支付结果</p>
+
+<p>用户在支付面板支付完之后，我们的服务器就等待微信服务器给我们发送支付结果，发送到哪个接口上呢？我们在
+生成预支付订单的时候，设置了一个参数notify_url，微信支付的结果会发送到这个url上</p>
+
+<blockquote>
+<p>同样的通知可能会多次发送给商户系统。商户系统必须能够正确处理重复的通知</p>
+</blockquote>
+
+<ul>
+<li>我们在业务代码中一定要处理好微信同一个订单发送多次通知，不然可能造成商品的累加购买</li>
+</ul>
+
+<blockquote>
+<p>在通知一直不成功的情况下，微信总共会发起10次通知，通知频率为15s/15s/30s/3m/10m/20m/30m/30m/30m/60m/3h/3h/3h/6h/6h - 总计 24h4m</p>
+
+<p>商户系统对于支付结果通知的内容一定要做签名验证,并校验返回的订单金额是否与商户侧的订单金额一致，防止数据泄漏导致出现“假通知”，造成资金损失</p>
+</blockquote>
+
+<ul>
+<li>校验签名时，刚开始误认为返回的签名与我生成的支付签名是一样的，结果却是不一样的，是要重新进行签名，然后校验签名是否返回的签名相同。</li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th align="center">生成支付签名时传入的参数：</th>
+<th align="center">重新签名时传入的参数</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">appid（小程序id）</td>
+<td align="center">appid（小程序id）</td>
+</tr>
+
+<tr>
+<td align="center">body（信息主体）</td>
+<td align="center">——</td>
+</tr>
+
+<tr>
+<td align="center">mch_id（商户号）</td>
+<td align="center">mch_id（商户号）</td>
+</tr>
+
+<tr>
+<td align="center">notify_url（回调URL）</td>
+<td align="center">——</td>
+</tr>
+
+<tr>
+<td align="center">trade_type（交易类型）</td>
+<td align="center">trade_type（交易类型）</td>
+</tr>
+
+<tr>
+<td align="center">spbill_create_ip（终端IP）</td>
+<td align="center">——</td>
+</tr>
+
+<tr>
+<td align="center">total_fee（总金额）</td>
+<td align="center">——</td>
+</tr>
+
+<tr>
+<td align="center">out_trade_no（自定义订单ID）</td>
+<td align="center">out_trade_no（自定义订单ID）</td>
+</tr>
+
+<tr>
+<td align="center">nonce_str（随机字符串）</td>
+<td align="center">nonce_str（随机字符串）</td>
+</tr>
+
+<tr>
+<td align="center">openid（用户id）</td>
+<td align="center">openid（用户id）</td>
+</tr>
+
+<tr>
+<td align="center">——</td>
+<td align="center">fee_type（标价币种）</td>
+</tr>
+
+<tr>
+<td align="center">——</td>
+<td align="center">bank_type（付款银行）</td>
+</tr>
+
+<tr>
+<td align="center">——</td>
+<td align="center">cash_fee（现金支付金额）</td>
+</tr>
+
+<tr>
+<td align="center">——</td>
+<td align="center">is_subscribe（是否关注公众号）</td>
+</tr>
+
+<tr>
+<td align="center">——</td>
+<td align="center">return_code（返回代码）</td>
+</tr>
+
+<tr>
+<td align="center">——</td>
+<td align="center">result_code（业务结果）</td>
+</tr>
+
+<tr>
+<td align="center">——</td>
+<td align="center">transaction_id（微信订单ID）</td>
+</tr>
+
+<tr>
+<td align="center">——</td>
+<td align="center">time_end（交易结束时间）</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="总结">总结</h3>
+
+<blockquote>
+<p>公众号改为开发模式之后，接收的URL必须是80端口或者443端口</p>
+
+<p>access_token有效期是7200秒(2小时), 重复获取会让上次获取的access_token失效，获取access_token的服务器IP必须提前配置在公众平台的白名单中</p>
+
+<p>小程序登录获取的code只能使用一次，而且会在极短时间内失效</p>
+
+<p>解密用户信息要严格遵守AES-128-CBC的解密方式，数据采用PKCS#7填充</p>
+
+<p>golang的float64类型，会把0.57变成0.56666&hellip;9，然后我们转化成int的时候变成了56，所以对float64要做相应的精度转化</p>
+
+<p>微信支付以分为单位</p>
+
+<p>业务上处理好微信支付同一条记录返回多次</p>
+
+<p>支付成功后返回的签名，我们要把与其一同返回的数据进行签名计算，拿到新的签名来与返回的签名作比较。而不能直接用支付的签名做校验</p>
+</blockquote>
+
+          </div>
+
+          
+          <div class="row">
+            <div class="col-md-8">
+            
+              <div class="mb-5">
+                
+<div class="li-x div-x post-meta">
+  <li class="pr-0"><a href="https://smh2274.github.io/tags/"><i class="fas fa-tags"></i></a></li>
+  <div class="tags-sm">
+    
+      <li><a href="https://smh2274.github.io/tags/go" role="button">Go </a></li>
+      
+    
+      <li><a href="https://smh2274.github.io/tags/wechat" role="button">wechat </a></li>
+      
+    
+  </div>
+</div>
+              </div>
+            
+            </div>
+            
+          </div>
+          
+
+          
+          <div class="row pt-3">
+            <div class="col-md-6">
+              
+                <a href=https://smh2274.github.io/blog/2019-06/%E6%B7%B1%E5%BA%A6%E5%AF%86%E8%A7%A3go%E4%B9%8Binterface/ class="post-meta">Previous
+                  <div class="pt-2 pb-5 d-flex">
+                    <i class="fas fa-angle-left text-grey font-weight-bold mr-2 active-color"></i>
+                    <span>深度密解Go之interface</span>
+                  </div>
+                </a>
+              
+            </div>
+            
+            <div class="col-md-6 text-right" >
+              
+            </div>
+          </div>
+
+          
+
+        </div>
+        
+
+      </div>
+      
+
+      
+	
+	
+	
+	
+		
+		
+		
+	
+
+		
+		<div class="col-md-2 pl-0">
+
+			
+			<div id="page-scrollspy" class="toc-nav">
+				
+				<ul class="nav nav-pills ml-0">
+					
+					<li class="nav-item pb-3 text-center">
+						<span class="font-weight-bold mb-2">- CATALOG - </span>
+					</li>
+
+					
+						
+						
+							
+								
+								
+									<ul class="nav">
+								
+									<ul class="nav">
+								
+								
+
+										<li class="nav-item">
+						 					<a class="nav-link" href="#%e5%be%ae%e4%bf%a1%e5%85%ac%e4%bc%97%e5%8f%b7%e5%bc%80%e5%8f%91">
+												 微信公众号开发
+											</a>
+										</li>
+						 
+								
+								
+									</ul>
+								
+									</ul>
+								
+							
+						
+				 
+						
+						
+							
+								
+								
+									<ul class="nav">
+								
+									<ul class="nav">
+								
+								
+
+										<li class="nav-item">
+						 					<a class="nav-link" href="#%e5%b0%8f%e7%a8%8b%e5%ba%8f%e5%bc%80%e5%8f%91">
+												 小程序开发
+											</a>
+										</li>
+						 
+								
+								
+									</ul>
+								
+									</ul>
+								
+							
+						
+				 
+						
+						
+							
+								
+								
+									<ul class="nav">
+								
+									<ul class="nav">
+								
+								
+
+										<li class="nav-item">
+						 					<a class="nav-link" href="#%e6%80%bb%e7%bb%93">
+												 总结
+											</a>
+										</li>
+						 
+								
+								
+									</ul>
+								
+									</ul>
+								
+							
+						
+				 
+
+				</ul>
+			</div>
+			
+
+		</div>
+		
+	
+
+    </div>
+    
+
+
+  </main>
+  
+
+
+    
+    
+<footer class="page-footer text-center font-small mt-4 wow fadeIn">
+
+
+    
+    <div class="pb-2 mt-5 pt-5">
+        
+        <a href="https://github.com/smh2274 " target="_blank" rel="noopener"><i class="fab fa-github mr-3"
+                                                                                aria-hidden="true"></i></a>
+        
+
+        
+        <a href="https://smh2274.github.io/img/Wechat.jpeg" target="_blank" rel="noopener"><i class="fab fa-weixin mr-3"
+                                                                               aria-hidden="true"></i></a>
+        
+
+        
+        <a href="https://gophers.slack.com/messages/DF1GXAY3X/files/UF2NU0G2J/" target="_blank" rel="noopener"><i class="fab fa-slack-hash mr-3"
+                                                                              aria-hidden="true"></i></a>
+        
+
+        
+        <a href="https://www.linkedin.com/in/%E6%98%8E%E8%88%AA-%E5%8F%B2-32a979182/" target="_blank" rel="noopener"><i class="fab fa-linkedin-in mr-3"
+                                                                                 aria-hidden="true"></i></a>
+        
+
+        
+
+
+        
+        <a href="mailto:17858753860@163.com"><i class="far fa-envelope-open mr-3" aria-hidden="true"></i></a>
+        
+
+        
+
+        
+
+    </div>
+    
+
+    
+    <div class="copyright py-4">
+        
+        <span>  Copyright 2019 - 2019 &copy; |  SMH. All Rights Reserved <a
+                href='https://github.com/smh2274/smh2274.github.io' target="_blank">project</a> by <a
+                href='https://github.com/smh2274' target="_blank">Troye.Shi</a>  </span>
+    </div>
+    
+
+</footer>
+
+
+    
+
+
+
+
+
+
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/jquery/jquery.smooth-scroll.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/popper.min.js"></script>
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/holder.min.js"></script>
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors-extensions/bootstrap4/bootstrap.js" ></script>
+
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/mdb/mdb.min.js"></script>
+
+<script type="text/javascript" src="https://smh2274.github.io/js/main.js"></script>
+
+
+
+  
+  <script src="https://smh2274.github.io/js/vendors/highlight.pack.js"> </script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+ 
+  <script src="https://smh2274.github.io/js/vendors/katex/katex.min.js"> </script>
+  <script src="https://smh2274.github.io/js/vendors/katex/contrib/auto-render.min.js"></script>
+
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          renderMathInElement(document.body);
+      });
+  </script>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+  
+  new WOW().init();
+</script>
+
+
+
+
+  </body>
+</html>

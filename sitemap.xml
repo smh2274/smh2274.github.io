@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://smh2274.github.io/blog/2019-06/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2019-06-12T21:52:22+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://smh2274.github.io/blog/2019-06/%E6%B7%B1%E5%BA%A6%E5%AF%86%E8%A7%A3go%E4%B9%8Binterface/</loc>
+    <lastmod>2019-06-02T21:52:22+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://smh2274.github.io/moment/</loc>
     <lastmod>2019-05-19T20:29:37-07:00</lastmod>
   </url>
@@ -55,7 +65,7 @@
   
   <url>
     <loc>https://smh2274.github.io/tags/go/</loc>
-    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
+    <lastmod>2019-06-12T21:52:22+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -67,7 +77,7 @@
   
   <url>
     <loc>https://smh2274.github.io/</loc>
-    <lastmod>2019-05-16T08:52:22+08:00</lastmod>
+    <lastmod>2019-06-12T21:52:22+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -83,14 +93,20 @@
   </url>
   
   <url>
+    <loc>https://smh2274.github.io/tags/wechat/</loc>
+    <lastmod>2019-06-12T21:52:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://smh2274.github.io/series/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/</loc>
-    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
+    <lastmod>2019-06-12T21:52:22+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://smh2274.github.io/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/</loc>
-    <lastmod>2019-03-25T23:11:22+08:00</lastmod>
+    <lastmod>2019-06-12T21:52:22+08:00</lastmod>
     <priority>0</priority>
   </url>
   

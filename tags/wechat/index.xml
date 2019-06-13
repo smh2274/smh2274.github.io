@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Wechat on SMH BLOG</title>
+    <link>https://smh2274.github.io/tags/wechat/</link>
+    <description>Recent content in Wechat on SMH BLOG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zn-Hans</language>
+    <lastBuildDate>Wed, 12 Jun 2019 21:52:22 +0800</lastBuildDate>
+    
+	<atom:link href="https://smh2274.github.io/tags/wechat/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>微信开发</title>
+      <link>https://smh2274.github.io/blog/2019-06/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/</link>
+      <pubDate>Wed, 12 Jun 2019 21:52:22 +0800</pubDate>
+      
+      <guid>https://smh2274.github.io/blog/2019-06/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/</guid>
+      <description>大纲如下 微信公众号开发 服务器验证 处理消息 推送消息 生成菜单 小程序开发 获取个人信息 微信支付 总结 微信公众号开发 1.服务器校验 timestamp(时间戳), nonce(随机字符串), signature(签名), token(令牌) func AccessVerify(timestamp, nonce, signature, token string) (bool, error) { info := []string{timestamp, nonce, token} sort.Strings(info) s := sha1.New() if _, err := io.WriteString(s, strings.Join(info, &amp;quot;&amp;quot;)); err != nil { return false, errors.New(&amp;quot;Sha1 Code Fail &amp;quot; + err.Error()) } newSignature := fmt.Sprintf(&amp;quot;%x&amp;quot;, s.Sum(nil)) return newSignature == signature, nil } 接收的URL必须是80端口或者443端口 2.处理消息 消息类型 text （文本） image （图片） voice （</description>
+    </item>
+    
+  </channel>
+</rss>

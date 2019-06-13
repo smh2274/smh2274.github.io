@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zn-Hans">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1" />
+  <meta name="author" content="Troye.Shi">
+  <meta name="description" content="1. Go 语言与鸭子类型的关系 先直接来看维基百科里的定义： If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck. Duck Typing，鸭子类型，是动态编程语言的一种对象推断策略，它更关注对象能如何被使用，而不是对象的类型本身。Go 语言作为一门静态语言，它通过通过接口的方式完美支持鸭子类型。 例如，在动态语言 python 中，定义一个这样的函数： def hello_world(coder): coder.say_hello() 当调用此函数的时候，可以传入任意类型，只要它实现了 say_hello() 函数就可以。如果没有实现，运行过程">
+  
+  <meta property="og:title" content="深度密解Go之interface" />
+<meta property="og:description" content="1. Go 语言与鸭子类型的关系 先直接来看维基百科里的定义： If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck. Duck Typing，鸭子类型，是动态编程语言的一种对象推断策略，它更关注对象能如何被使用，而不是对象的类型本身。Go 语言作为一门静态语言，它通过通过接口的方式完美支持鸭子类型。 例如，在动态语言 python 中，定义一个这样的函数： def hello_world(coder): coder.say_hello() 当调用此函数的时候，可以传入任意类型，只要它实现了 say_hello() 函数就可以。如果没有实现，运行过程" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://smh2274.github.io/blog/2019-06/%E6%B7%B1%E5%BA%A6%E5%AF%86%E8%A7%A3go%E4%B9%8Binterface/" /><meta property="article:published_time" content="2019-06-02T21:52:22&#43;08:00"/>
+<meta property="article:modified_time" content="2019-06-02T21:52:22&#43;08:00"/><meta property="og:see_also" content="https://smh2274.github.io/blog/2019-06/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/" /><meta property="og:see_also" content="https://smh2274.github.io/blog/2019-03/golang%E4%B9%8Bxml/" />
+
+
+
+  <title>
+  
+       深度密解Go之interface | SMH BLOG 
+  
+  </title>
+
+  <link rel="canonical" href="https://smh2274.github.io/blog/2019-06/%E6%B7%B1%E5%BA%A6%E5%AF%86%E8%A7%A3go%E4%B9%8Binterface/">
+
+  
+  
+
+  
+  <link href="https://smh2274.github.io/css/vendors-extensions/fontawesome/all.min.css" rel="stylesheet">
+
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:300,400,500,600">
+  <link href="https://smh2274.github.io/css/font.css" rel="stylesheet"> 
+    
+  
+  <link href="https://smh2274.github.io/css/vendors/bootstrap4/bootstrap.min.css" rel="stylesheet">
+  <link href="https://smh2274.github.io/css/vendors-extensions/mdb/mdb.min.css" rel="stylesheet"> 
+  <link href="https://smh2274.github.io/css/vendors/mdb/style.min.css" rel="stylesheet"> 
+  <link href="https://smh2274.github.io/css/main.css" rel="stylesheet">
+
+
+  
+  <link rel="shortcut icon"
+  
+      href="https://smh2274.github.io/img/shi.png"
+  
+  >
+
+
+  
+  
+
+  <style type="text/css">
+      @media (min-width: 800px) and (max-width: 850px) {
+              .navbar:not(.top-nav-collapse) {
+                  background: #1C2331!important;
+              }
+          }
+  </style>
+
+
+  
+    
+    <link rel="stylesheet" href="https://smh2274.github.io/js/vendors/katex/katex.min.css">
+  
+  
+
+  
+    
+    <link rel="stylesheet" href="https://smh2274.github.io/css/vendors/highlight/github-gist.css">
+  
+
+</head>
+
+  <body class="bg-light" data-spy="scroll" data-target="#page-scrollspy" data-offset="90">
+  
+    
+    
+
+    
+      
+
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+
+      
+      <a class="navbar-brand" href="https://smh2274.github.io">
+          
+        <img class="avatar" src="https://smh2274.github.io/img/shi.png" style="width: 40px!important;height: auto;"  class="d-inline-block align-top" alt="" >
+        
+        <strong> Troye.Shi</strong>
+      </a>
+
+      
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        
+        <ul class="navbar-nav mr-auto ">
+          <li class="nav-item ">
+            <a class="nav-link" href="https://smh2274.github.io">Home</a>
+          </li>
+             
+            <li class="nav-item ">
+              <a class="nav-link" href="https://smh2274.github.io/blog/" >Blog  </a>
+            </li>
+          
+             
+            <li class="nav-item ">
+              <a class="nav-link" href="https://smh2274.github.io/moment/" >Moment  </a>
+            </li>
+          
+             
+            <li class="nav-item ">
+              <a class="nav-link" href="https://smh2274.github.io/about/" >About  </a>
+            </li>
+          
+          
+        </ul>
+
+      </div>
+
+    </div>
+  </nav>
+  
+ 
+      
+
+
+
+
+
+
+
+<div id="site-header" class="carousel slide carousel-fade" data-ride="carousel" style="height: 18rem;">
+    
+
+    
+    
+    
+
+    
+    <div class="carousel-inner" role="listbox">
+        
+        
+
+        
+        <div class="carousel-item active">
+            <div class="view"
+                 style="background-image: url('https://smh2274.github.io/img/header-slides/raw_14563119.jpg'); background-repeat: no-repeat; background-size: cover;">
+
+                
+                <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
+
+                    
+                    
+                    
+
+                </div>
+                
+
+            </div>
+        </div>
+        
+        
+        
+        
+
+        
+        <div class="carousel-item">
+            <div class="view"
+                 style="background-image: url('https://smh2274.github.io/img/header-slides//raw_1515847341.jpg'); background-repeat: no-repeat; background-size: cover;">
+
+                
+                <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
+
+
+                </div>
+                
+
+            </div>
+        </div>
+        
+        
+        
+
+
+    </div>
+    
+
+    
+    <div class="carousel-content text-center white-text wow fadeIn">
+        <div class="row mx-0 headfont mt-3 pt-4">
+            
+            <div class="col-12 col-sm-5 align-middle">
+                <a href="https://smh2274.github.io">
+                    
+                    <img class="pull-right avatar avatar-md" src="https://smh2274.github.io/img/profile.png" alt="">
+                    
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-7 text-left pl-2">
+                <a href="https://smh2274.github.io">
+                    <h1 class="mb-2 h1" style="font-weight: 300;">
+                        <strong>SMH BLOG</strong>
+                    </h1>
+                </a>
+
+
+                
+                <div class="mt-2" style="font-size: 1rem; color: white;">
+                    
+                    <a href="https://github.com/smh2274" target="_blank" rel="noopener"><i class="fab fa-github pr-1"
+                                                                                           aria-hidden="true"></i></a>
+                    
+
+                    
+                    <a href="https://smh2274.github.io/img/Wechat.jpeg" target="_blank" rel="noopener"><i class="fab fa-weixin pr-1"
+                                                                                           aria-hidden="true"></i></a>
+                    
+
+                    
+                    <a href="https://gophers.slack.com/messages/DF1GXAY3X/files/UF2NU0G2J/" target="_blank" rel="noopener"><i class="fab fa-slack pr-1"
+                                                                                          aria-hidden="true"></i></a>
+                    
+
+                    
+                    <a href="https://www.linkedin.com/in/%E6%98%8E%E8%88%AA-%E5%8F%B2-32a979182/" target="_blank" rel="noopener"><i
+                            class="fab fa-linkedin pr-1" aria-hidden="true"></i></a>
+                    
+
+                    
+
+                    
+                    <a href="mailto:17858753860@163.com"><i class="far fa-envelope-open pr-1"
+                                                                  aria-hidden="true"></i></a>
+                    
+
+                    
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    
+    
+
+</div>
+
+  
+    
+
+    
+  
+  <main class="post-main-wrapper">
+    
+    
+    <div class="row">
+
+      
+
+      
+      <div class="col-md-10">
+      
+
+        
+        <div class="z-depth-1  post-wrapper white-bg single-post">
+
+          <div class="post-header text-center" >
+  <ul class="post-meta li-x">
+    
+      
+        <li><a href="https://smh2274.github.io/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91"><i class="fas fa-folder-open pr-1" aria-hidden="true"></i> 后端开发 </a></li>
+      
+    
+    
+      
+        <li><a href="https://smh2274.github.io/series/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91"><i class="fas fa-bookmark pr-1" aria-hidden="true"></i>后端开发</a></li>
+      
+    
+  </ul>
+
+  <div class="px-4 post-heading">深度密解Go之interface</div>
+
+  <ul class="post-meta li-x mt-1">
+    
+      <li>Jun 2, 2019</li>
+    
+
+    
+      <li class="middot"></li>
+      <li>6 minutes read</li>
+    
+  </ul>
+  
+    <div class="view">
+      <img src="https://smh2274.github.io/images/blog/2019-06/go_interface.png" />
+    </div>
+  
+
+</div>
+
+
+          <div class="post-content markdown">
+            
+
+<h2 id="1-go-语言与鸭子类型的关系">1. Go 语言与鸭子类型的关系</h2>
+
+<p>先直接来看维基百科里的定义：</p>
+
+<blockquote>
+<p>If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck.</p>
+</blockquote>
+
+<p>Duck Typing，鸭子类型，是动态编程语言的一种对象推断策略，它更关注对象能如何被使用，而不是对象的类型本身。Go 语言作为一门静态语言，它通过通过接口的方式完美支持鸭子类型。</p>
+
+<p>例如，在动态语言 python 中，定义一个这样的函数：</p>
+
+<pre><code class="language-python">def hello_world(coder):
+    coder.say_hello()
+</code></pre>
+
+<p>当调用此函数的时候，可以传入任意类型，只要它实现了 say_hello() 函数就可以。如果没有实现，运行过程中会出现错误。</p>
+
+<p>而在静态语言如 Java, C++ 中，必须要显示地声明实现了某个接口，之后，才能用在任何需要这个接口的地方。如果你在程序中调用 hello_world 函数，却传入了一个根本就没有实现 say_hello() 的类型，那在编译阶段就不会通过。这也是静态语言比动态语言更安全的原因。</p>
+
+<p>动态语言和静态语言的差别在此就有所体现。静态语言在编译期间就能发现类型不匹配的错误，不像动态语言，必须要运行到那一行代码才会报错。插一句，这也是我不喜欢用 python 的一个原因。当然，静态语言要求程序员在编码阶段就要按照规定来编写程序，为每个变量规定数据类型，这在某种程度上，加大了工作量，也加长了代码量。动态语言则没有这些要求，可以让人更专注在业务上，代码也更短，写起来更快，这一点，写 python 的同学比较清楚。</p>
+
+<p>Go 语言作为一门现代静态语言，是有后发优势的。它引入了动态语言的便利，同时又会进行静态语言的类型检查，写起来是非常 Happy 的。Go 采用了折中的做法：不要求类型显示地声明实现了某个接口，只要实现了相关的方法即可，编译器就能检测到。</p>
+
+<p>来看个例子：</p>
+
+<p>先定义一个接口，和使用此接口作为参数的函数：</p>
+
+<pre><code class="language-go">type IGreeting interface {
+    sayHello()
+}
+
+func sayHello(i IGreeting) {
+    i.sayHello()
+}
+</code></pre>
+
+<p>再来定义两个结构体：</p>
+
+<pre><code class="language-go">type Go struct {}
+func (g Go) sayHello() {
+    fmt.Println(&quot;Hi, I am GO!&quot;)
+}
+
+type PHP struct {}
+func (p PHP) sayHello() {
+    fmt.Println(&quot;Hi, I am PHP!&quot;)
+}
+</code></pre>
+
+<p>最后，在 main 函数里调用 sayHello() 函数：</p>
+
+<pre><code class="language-go">func main() {
+    golang := Go{}
+    php := PHP{}
+
+    sayHello(golang)
+    sayHello(php)
+}
+</code></pre>
+
+<p>程序输出：</p>
+
+<pre><code class="language-go">Hi, I am GO!
+Hi, I am PHP!
+</code></pre>
+
+<p>在 main 函数中，调用调用 sayHello() 函数时，传入了 golang, php 对象，它们并没有显式地声明实现了 IGreeting 类型，只是实现了接口所规定的 sayHello() 函数。实际上，编译器在调用 sayHello() 函数时，会隐式地将 golang, php 对象转换成 IGreeting 类型，这也是静态语言的类型检查功能。</p>
+
+<p>顺带再提一下动态语言的特点：</p>
+
+<blockquote>
+<p>变量绑定的类型是不确定的，在运行期间才能确定 函数和方法可以接收任何类型的参数，且调用时不检查参数类型 不需要实现接口</p>
+</blockquote>
+
+<p>总结一下，鸭子类型是一种动态语言的风格，在这种风格中，一个对象有效的语义，不是由继承自特定的类或实现特定的接口，而是由它&rdquo;当前方法和属性的集合&rdquo;决定。Go 作为一种静态语言，通过接口实现了 鸭子类型，实际上是 Go 的编译器在其中作了隐匿的转换工作。</p>
+
+<h2 id="2-值接收者和指针接收者的区别">2、值接收者和指针接收者的区别</h2>
+
+<h3 id="方法">方法</h3>
+
+<p>方法能给用户自定义的类型添加新的行为。它和函数的区别在于方法有一个接收者，给一个函数添加一个接收者，那么它就变成了方法。接收者可以是值接收者，也可以是指针接收者。</p>
+
+<p>在调用方法的时候，值类型既可以调用值接收者的方法，也可以调用指针接收者的方法；指针类型既可以调用指针接收者的方法，也可以调用值接收者的方法。</p>
+
+<p>也就是说，不管方法的接收者是什么类型，该类型的值和指针都可以调用，不必严格符合接收者的类型。</p>
+
+<p>来看个例子：</p>
+
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+type Person struct {
+    age int
+}
+
+func (p Person) howOld() int {
+return p.age
+}
+
+func (p *Person) growUp() {
+    p.age += 1
+}
+
+func main() {
+// qcrao 是值类型
+    qcrao := Person{age: 18}
+
+// 值类型 调用接收者也是值类型的方法
+    fmt.Println(qcrao.howOld())
+
+// 值类型 调用接收者是指针类型的方法
+    qcrao.growUp()
+    fmt.Println(qcrao.howOld())
+
+// ----------------------
+
+// stefno 是指针类型
+    stefno := &amp;Person{age: 100}
+
+// 指针类型 调用接收者是值类型的方法
+    fmt.Println(stefno.howOld())
+
+// 指针类型 调用接收者也是指针类型的方法
+    stefno.growUp()
+    fmt.Println(stefno.howOld())
+}
+</code></pre>
+
+<p>上例子的输出结果是:</p>
+
+<pre><code class="language-go">18
+19
+100
+101
+</code></pre>
+
+<p>调用了 growUp 函数后，不管调用者是值类型还是指针类型，它的 Age 值都改变了。</p>
+
+<p>实际上，当类型和方法的接收者类型不同时，其实是编译器在背后做了一些工作，用一个表格来呈现:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">-</th>
+<th align="center">值接收者</th>
+<th align="center">指针接收者</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">值类型调用者</td>
+<td align="center">方法会使用调用者的一个副本，类似于“传值”</td>
+<td align="center">使用值的引用来调用方法，上例中，qcrao.growUp()实际上是 (&amp;qcrao).growUp()</td>
+</tr>
+
+<tr>
+<td align="center">指针类型调用者</td>
+<td align="center">指针被解引用为值，上例中，stefno.howOld() 实际上是 (*stefno).howOld()</td>
+<td align="center">实际上也是“传值”，方法里的操作会影响到调用者，类似于指针传参，拷贝了一份指针</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="值接收者和指针接收者">值接收者和指针接收者</h3>
+
+<p>前面说过，不管接收者类型是值类型还是指针类型，都可以通过值类型或指针类型调用，这里面实际上通过语法糖起作用的。</p>
+
+<p>先说结论：实现了接收者是值类型的方法，相当于自动实现了接收者是指针类型的方法；而实现了接收者是指针类型的方法，不会自动生成对应接收者是值类型的方法。</p>
+
+<p>来看一个例子，就会完全明白：</p>
+
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+type coder interface {
+    code()
+    debug()
+}
+
+type Gopher struct {
+    language string
+}
+
+func (p Gopher) code() {
+    fmt.Printf(&quot;I am coding %s language\n&quot;, p.language)
+}
+
+func (p *Gopher) debug() {
+    fmt.Printf(&quot;I am debuging %s language\n&quot;, p.language)
+}
+
+func main() {
+    var c coder = &amp;Gopher{&quot;Go&quot;}
+    c.code()
+    c.debug()
+}
+</code></pre>
+
+<p>上述代码里定义了一个接口 coder，接口定义了两个函数：</p>
+
+<pre><code class="language-go">code()
+debug()
+</code></pre>
+
+<p>接着定义了一个结构体 Gopher，它实现了两个方法，一个值接收者，一个指针接收者。</p>
+
+<p>最后，我们在 main 函数里通过接口类型的变量调用了定义的两个函数。</p>
+
+<p>运行一下，结果：</p>
+
+<pre><code class="language-go">I am coding Go language
+I am debuging Go language
+</code></pre>
+
+<p>但是如果我们把 main 函数的第一条语句换一下：</p>
+
+<pre><code class="language-go">func main() {
+    var c coder = Gopher{&quot;Go&quot;}
+    c.code()
+    c.debug()
+}
+</code></pre>
+
+<p>运行一下，报错：</p>
+
+<pre><code class="language-go">./main.go:24:6: cannot use Programmer literal (type Programmer) as type coder in assignment:
+    Programmer does not implement coder (debug method has pointer receiver)
+</code></pre>
+
+<p>看出这两处代码的差别了吗？第一次是将 &amp;Gopher 赋给了 coder；第二次则是将 Gopher 赋给了 coder。</p>
+
+<p>第二次报错是说，Gopher 没有实现 coder。很明显了吧，因为 Gopher 类型并没有实现 debug 方法；表面上看， *Gopher 类型也没有实现 code 方法，但是因为 Gopher 类型实现了 code 方法，所以让 *Gopher 类型自动拥有了 code 方法。</p>
+
+<p>当然，上面的说法有一个简单的解释：接收者是指针类型的方法，很可能在方法中会对接收者的属性进行更改操作，从而影响接收者；而对于接收者是值类型的方法，在方法中不会对接收者本身产生影响。</p>
+
+<p>所以，当实现了一个接收者是值类型的方法，就可以自动生成一个接收者是对应指针类型的方法，因为两者都不会影响接收者。但是，当实现了一个接收者是指针类型的方法，如果此时自动生成一个接收者是值类型的方法，原本期望对接收者的改变（通过指针实现），现在无法实现，因为值类型会产生一个拷贝，不会真正影响调用者。</p>
+
+<p>最后，只要记住下面这点就可以了：</p>
+
+<blockquote>
+<p>如果实现了接收者是值类型的方法，会隐含地也实现了接收者是指针类型的方法。</p>
+</blockquote>
+
+<h3 id="两者分别在何时使用">两者分别在何时使用</h3>
+
+<p>如果方法的接收者是值类型，无论调用者是对象还是对象指针，修改的都是对象的副本，不影响调用者；如果方法的接收者是指针类型，则调用者修改的是指针指向的对象本身。</p>
+
+<p>使用指针作为方法的接收者的理由：</p>
+
+<p>方法能够修改接收者指向的值。</p>
+
+<p>避免在每次调用方法时复制该值，在值的类型为大型结构体时，这样做会更加高效。</p>
+
+<p>是使用值接收者还是指针接收者，不是由该方法是否修改了调用者（也就是接收者）来决定，而是应该基于该类型的本质。</p>
+
+<p>如果类型具备“原始的本质”，也就是说它的成员都是由 Go 语言里内置的原始类型，如字符串，整型值等，那就定义值接收者类型的方法。像内置的引用类型，如 slice，map，interface，channel，这些类型比较特殊，声明他们的时候，实际上是创建了一个 header， 对于他们也是直接定义值接收者类型的方法。这样，调用函数时，是直接 copy 了这些类型的 header，而 header 本身就是为复制设计的。</p>
+
+<p>如果类型具备非原始的本质，不能被安全地复制，这种类型总是应该被共享，那就定义指针接收者的方法。比如 go 源码里的文件结构体（struct File）就不应该被复制，应该只有一份实体。</p>
+
+<p>未完，待续。。。。。</p>
+
+          </div>
+
+          
+          <div class="row">
+            <div class="col-md-8">
+            
+              <div class="mb-5">
+                
+<div class="li-x div-x post-meta">
+  <li class="pr-0"><a href="https://smh2274.github.io/tags/"><i class="fas fa-tags"></i></a></li>
+  <div class="tags-sm">
+    
+      <li><a href="https://smh2274.github.io/tags/go" role="button">Go </a></li>
+      
+    
+  </div>
+</div>
+              </div>
+            
+            </div>
+            
+          </div>
+          
+
+          
+          <div class="row pt-3">
+            <div class="col-md-6">
+              
+                <a href=https://smh2274.github.io/blog/2019-05/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/ class="post-meta">Previous
+                  <div class="pt-2 pb-5 d-flex">
+                    <i class="fas fa-angle-left text-grey font-weight-bold mr-2 active-color"></i>
+                    <span>SSH反向代理</span>
+                  </div>
+                </a>
+              
+            </div>
+            
+            <div class="col-md-6 text-right" >
+              
+                <a href=https://smh2274.github.io/blog/2019-06/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/ class="post-meta">Next
+                  <div class="pt-2 pb-5 flex-reverse">
+                    <i class="fas fa-angle-right text-grey font-weight-bold ml-2 active-color"></i>
+                    <span>微信开发</span>
+                  </div>
+                </a>
+              
+            </div>
+          </div>
+
+          
+
+        </div>
+        
+
+      </div>
+      
+
+      
+	
+	
+	
+	
+		
+		
+		
+	
+
+		
+		<div class="col-md-2 pl-0">
+
+			
+			<div id="page-scrollspy" class="toc-nav">
+				
+				<ul class="nav nav-pills ml-0">
+					
+					<li class="nav-item pb-3 text-center">
+						<span class="font-weight-bold mb-2">- CATALOG - </span>
+					</li>
+
+					
+						
+						
+							
+								
+								
+									<ul class="nav">
+								
+								
+
+										<li class="nav-item">
+						 					<a class="nav-link" href="#1-go-%e8%af%ad%e8%a8%80%e4%b8%8e%e9%b8%ad%e5%ad%90%e7%b1%bb%e5%9e%8b%e7%9a%84%e5%85%b3%e7%b3%bb">
+												 1. Go 语言与鸭子类型的关系
+											</a>
+										</li>
+						 
+								
+								
+									</ul>
+								
+							
+						
+				 
+						
+						
+							
+								
+								
+									<ul class="nav">
+								
+								
+
+										<li class="nav-item">
+						 					<a class="nav-link" href="#2-%e5%80%bc%e6%8e%a5%e6%94%b6%e8%80%85%e5%92%8c%e6%8c%87%e9%92%88%e6%8e%a5%e6%94%b6%e8%80%85%e7%9a%84%e5%8c%ba%e5%88%ab">
+												 2、值接收者和指针接收者的区别
+											</a>
+										</li>
+						 
+								
+								
+									</ul>
+								
+							
+						
+				 
+						
+						
+							
+								
+								
+									<ul class="nav">
+								
+									<ul class="nav">
+								
+								
+
+										<li class="nav-item">
+						 					<a class="nav-link" href="#%e6%96%b9%e6%b3%95">
+												 方法
+											</a>
+										</li>
+						 
+								
+								
+									</ul>
+								
+									</ul>
+								
+							
+						
+				 
+						
+						
+							
+								
+								
+									<ul class="nav">
+								
+									<ul class="nav">
+								
+								
+
+										<li class="nav-item">
+						 					<a class="nav-link" href="#%e5%80%bc%e6%8e%a5%e6%94%b6%e8%80%85%e5%92%8c%e6%8c%87%e9%92%88%e6%8e%a5%e6%94%b6%e8%80%85">
+												 值接收者和指针接收者
+											</a>
+										</li>
+						 
+								
+								
+									</ul>
+								
+									</ul>
+								
+							
+						
+				 
+						
+						
+							
+								
+								
+									<ul class="nav">
+								
+									<ul class="nav">
+								
+								
+
+										<li class="nav-item">
+						 					<a class="nav-link" href="#%e4%b8%a4%e8%80%85%e5%88%86%e5%88%ab%e5%9c%a8%e4%bd%95%e6%97%b6%e4%bd%bf%e7%94%a8">
+												 两者分别在何时使用
+											</a>
+										</li>
+						 
+								
+								
+									</ul>
+								
+									</ul>
+								
+							
+						
+				 
+
+				</ul>
+			</div>
+			
+
+		</div>
+		
+	
+
+    </div>
+    
+
+
+  </main>
+  
+
+
+    
+    
+<footer class="page-footer text-center font-small mt-4 wow fadeIn">
+
+
+    
+    <div class="pb-2 mt-5 pt-5">
+        
+        <a href="https://github.com/smh2274 " target="_blank" rel="noopener"><i class="fab fa-github mr-3"
+                                                                                aria-hidden="true"></i></a>
+        
+
+        
+        <a href="https://smh2274.github.io/img/Wechat.jpeg" target="_blank" rel="noopener"><i class="fab fa-weixin mr-3"
+                                                                               aria-hidden="true"></i></a>
+        
+
+        
+        <a href="https://gophers.slack.com/messages/DF1GXAY3X/files/UF2NU0G2J/" target="_blank" rel="noopener"><i class="fab fa-slack-hash mr-3"
+                                                                              aria-hidden="true"></i></a>
+        
+
+        
+        <a href="https://www.linkedin.com/in/%E6%98%8E%E8%88%AA-%E5%8F%B2-32a979182/" target="_blank" rel="noopener"><i class="fab fa-linkedin-in mr-3"
+                                                                                 aria-hidden="true"></i></a>
+        
+
+        
+
+
+        
+        <a href="mailto:17858753860@163.com"><i class="far fa-envelope-open mr-3" aria-hidden="true"></i></a>
+        
+
+        
+
+        
+
+    </div>
+    
+
+    
+    <div class="copyright py-4">
+        
+        <span>  Copyright 2019 - 2019 &copy; |  SMH. All Rights Reserved <a
+                href='https://github.com/smh2274/smh2274.github.io' target="_blank">project</a> by <a
+                href='https://github.com/smh2274' target="_blank">Troye.Shi</a>  </span>
+    </div>
+    
+
+</footer>
+
+
+    
+
+
+
+
+
+
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/jquery/jquery.smooth-scroll.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/popper.min.js"></script>
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/holder.min.js"></script>
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors-extensions/bootstrap4/bootstrap.js" ></script>
+
+<script type="text/javascript" src="https://smh2274.github.io/js/vendors/mdb/mdb.min.js"></script>
+
+<script type="text/javascript" src="https://smh2274.github.io/js/main.js"></script>
+
+
+
+  
+  <script src="https://smh2274.github.io/js/vendors/highlight.pack.js"> </script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+ 
+  <script src="https://smh2274.github.io/js/vendors/katex/katex.min.js"> </script>
+  <script src="https://smh2274.github.io/js/vendors/katex/contrib/auto-render.min.js"></script>
+
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          renderMathInElement(document.body);
+      });
+  </script>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+  
+  new WOW().init();
+</script>
+
+
+
+
+  </body>
+</html>
